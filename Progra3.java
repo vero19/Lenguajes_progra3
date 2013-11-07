@@ -8,9 +8,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+import java.util.Scanner;
 
 
-public class metodo_if {
+public class Progra3 {
 	public static ListaSimple listaCodigo = new ListaSimple(); // lista que almacena todo el codigo
 	static ListaSimple estatico = new ListaSimple ("Estatico"); // lista que almacena los datos estaticos
 	static ListaSimple dinamico = new ListaSimple ("Dinamico"); // lista que almacena los datos dinamicos
@@ -23,9 +24,15 @@ public class metodo_if {
 	 * luego llama a la funcion evaluar
 	 * y por ultimo a la funcion imprimirTablas */
 	public static void main(String [] args) throws IOException{
+		System.out.println("");
+		String ruta;
+		Scanner in = new Scanner(System.in);
+		System.out.print("Indique el nombre del archivo: \033[1;32m");
+		ruta = in.next();
+		System.out.print("\033[0m");
 		// Archivo que contiene el codigo SML
-		File archivo = (new File("codigo.txt"));
-		FileReader fr = new FileReader(archivo);
+		//	File archivo = (new File(ruta));
+		FileReader fr = new FileReader(ruta);
 		BufferedReader br = new BufferedReader(fr);
 		String linea = br.readLine();
 		int pos=0;
@@ -38,6 +45,7 @@ public class metodo_if {
 			linea = br.readLine();}
 		NodosListaSimple aux = listaCodigo.PrimerNodo;
 		evaluar(aux,listaCodigo);
+		System.out.println("");
 		imprimirTablas();
 	}
 	
@@ -614,17 +622,18 @@ public class metodo_if {
 	}
 	
 	public static void imprimirTablas(){
-		System.out.println(" TABLA ESTATICA ");
+		System.out.println("\033[1;32m---- Tabla ambiente estatico ----");
+		System.out.print("\033[0m");
 		NodosListaSimple aux = estatico.PrimerNodo;
 		NodosListaSimple aux1 = dinamico.PrimerNodo;
 		while(aux!=null){
-			System.out.println(aux.dato+" -> "+aux.tipo);
+			System.out.println(" 	\033[1;33m"+aux.dato+" \033[0m--> "+aux.tipo);
 			aux = aux.siguiente;
 		}
 		System.out.println(" ");
-		System.out.println(" TABLA DINAMICA ");
+		System.out.println("\033[1;32m---- Tabla ambiente dinamico ----\033[0m");
 		while(aux1!=null){
-			System.out.println(aux1.dato+" -> "+aux1.tipo);
+			System.out.println(" 	\033[1;33m"+aux1.dato+" \033[0m--> "+aux1.tipo);
 			aux1 = aux1.siguiente;
 		}
 	}
