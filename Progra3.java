@@ -7,9 +7,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 import java.util.Scanner;
-
+import java.util.StringTokenizer;
 
 public class Progra3 {
 	public static ListaSimple listaCodigo = new ListaSimple(); // lista que almacena todo el codigo
@@ -24,12 +23,12 @@ public class Progra3 {
 	 * luego llama a la funcion evaluar
 	 * y por ultimo a la funcion imprimirTablas */
 	public static void main(String [] args) throws IOException{
-		System.out.println("");
 		String ruta;
 		Scanner in = new Scanner(System.in);
+		System.out.println("");
 		System.out.print("Indique el nombre del archivo: \033[1;32m");
 		ruta = in.next();
-		System.out.print("\033[0m");
+		System.out.print("\033[m");
 		// Archivo que contiene el codigo SML
 		//	File archivo = (new File(ruta));
 		FileReader fr = new FileReader(ruta);
@@ -45,7 +44,6 @@ public class Progra3 {
 			linea = br.readLine();}
 		NodosListaSimple aux = listaCodigo.PrimerNodo;
 		evaluar(aux,listaCodigo);
-		System.out.println("");
 		imprimirTablas();
 	}
 	
@@ -254,7 +252,22 @@ public class Progra3 {
 				catch(NumberFormatException e1){
 					NodosListaSimple nodoAux = estatico.BuscarElemento1(dato1), nodoAux3 = dinamico.BuscarElemento1(dato1);
 					if(nodoAux!=null){
-						String tipo = nodoAux.tipo, valor = nodoAux3.tipo;
+						String tipo = nodoAux.tipo, valor = nodoAux3.tipo;		
+						if(valor.equals("true")|valor.equals("false")){
+							if(dato.equals("false")|dato.equals("true")){
+								if(valor.equals(dato)) evaluarThen(a2);
+								else evaluarElse(a3);
+							}
+							else{
+							NodosListaSimple nodoAux1 = estatico.BuscarElemento1(dato), nodoAux2 = dinamico.BuscarElemento1(dato);
+							String tipo1 = nodoAux1.tipo; String valor1 = nodoAux2.tipo;
+							if(valor.equals("false")|valor.equals("true")){
+								if(tipo.equals(valor)) evaluarThen(a2);
+								else evaluarElse(a3);
+							}
+							else ;
+							}
+							}
 						try{ num1 = Integer.parseInt(valor);
 							try{ num2 = Integer.parseInt(dato); comparaciones(num1,num2,dato2,a2,a3);}
 							catch(NumberFormatException e2){
@@ -263,8 +276,24 @@ public class Progra3 {
 									tipo = nodoAux1.tipo;
 									valor = nodoAux2.tipo;
 									num2 = Integer.parseInt(valor);
-									comparaciones(num1,num2,dato2,a2,a3);} else;}}
-						catch(NumberFormatException e2){;}}	else;}}break;}}
+									comparaciones(num1,num2,dato2,a2,a3);} else;} }
+						catch(NumberFormatException e2){;}}	
+					else{
+						int b = verificarOperacion(dato1);
+						num1 = Integer.parseInt(resultadoValor);
+						try{ num2 = Integer.parseInt(dato); comparaciones(num1,num2,dato2,a2,a3);}
+						catch(NumberFormatException e4){
+							NodosListaSimple nodoAux1 = estatico.BuscarElemento1(dato), nodoAux2 = dinamico.BuscarElemento1(dato);
+							if(nodoAux1 != null){
+								String tipo = nodoAux1.tipo;
+								String valor = nodoAux2.tipo;
+								num2 = Integer.parseInt(valor);
+								comparaciones(num1,num2,dato2,a2,a3);} 
+							else{b = verificarOperacion(dato);
+							num2 = Integer.parseInt(resultadoValor); comparaciones(num1,num2,dato2,a2,a3);}}
+					}
+					
+				}}break;}}
 
 	/*Funcion comparaciones(num1,num2,comp,e2,e3
 	 * los parametros son: los dos numero a comparar, el operando de comparacion
@@ -272,35 +301,37 @@ public class Progra3 {
 	 * Funcion que compara la condicion del if, y determinar si evaluar la parte del then o del else*/
 	public static void comparaciones(int num1, int num2, String comp, ArrayList e2, ArrayList e3) throws IOException{
 		if(comp.equals("<")){
-			if(num1 < num2){ evaluarThen(num1,num2,e2);}
-			else evaluarElse(num1,num2,e3); }
+			if(num1 < num2){ evaluarThen(e2);}
+			else evaluarElse(e3); }
 		else if(comp.equals(">")){
-			if(num1>num2) evaluarThen(num1,num2,e2);
-			else evaluarElse(num1,num2,e3);}
+			if(num1>num2) evaluarThen(e2);
+			else evaluarElse(e3);}
 		else{
-			if(num1==num2) evaluarThen(num1,num2,e2);
-			else evaluarElse(num1,num2,e3);}
+			if(num1==num2) evaluarThen(e2);
+			else evaluarElse(e3);}
 	}
 
 	/*Funcion evaluarThen(num1,num2,e2)
 	 * Parametros: los dos numeros del if, y el arreglo que contiene la 
 	 * condicion then del if*/
-	public static void evaluarThen(int num1,int num2, ArrayList e2) throws IOException{
+	public static void evaluarThen(ArrayList e2) throws IOException{
 		Iterator<String> datos = e2.iterator();
 		String nombre = datos.next();
 		if(e2.size() == 1){
 			if(nombre.length()==1){
-				try{ int a = Integer.parseInt(nombre); resultadoValor = String.valueOf(a);
-					resultadoTipo = "int";}
+				try{
+					int a = Integer.parseInt(nombre);
+					resultadoValor = String.valueOf(a);
+					resultadoTipo = "int";
+				}
 				catch(NumberFormatException e){
 					NodosListaSimple nodoAux1 = estatico.BuscarElemento1(nombre), nodoAux2 = dinamico.BuscarElemento1(nombre);
 					if(nodoAux1 != null){
 						String tipo = nodoAux1.tipo, valor = nodoAux2.tipo;
-						resultadoValor = valor; resultadoTipo = tipo; }	else ; } }
+						resultadoValor = valor; resultadoTipo = tipo;} else ;}}
 			else{
-				try{  int a = Integer.parseInt(nombre); resultadoValor = String.valueOf(a);
-					resultadoTipo = "int";}
-				catch(NumberFormatException e){/*System.out.println("funcion de josue"); //javax.script}*/}}}
+				try{ int a = Integer.parseInt(nombre); resultadoValor = String.valueOf(a); resultadoTipo = "int";}
+				catch(NumberFormatException e){int num = verificarOperacion(nombre);}  /*javax.script}*/} }
 		else{
 			if(nombre.equals("let")) System.out.println("funcion vero");
 			else if(nombre.equals("if")){
@@ -325,7 +356,7 @@ public class Progra3 {
 	/*Funcion evaluarElse(num1,num2,e2)
 	 * Parametros: los dos numeros del if, y el arreglo que contiene la 
 	 * condicion else del if*/
-	public static void evaluarElse(int num1,int num2,ArrayList e3) throws IOException{
+	public static void evaluarElse(ArrayList e3) throws IOException{
 		Iterator<String> datos = e3.iterator();
 		String nombre = datos.next();
 		if(e3.size() == 1){
@@ -342,7 +373,7 @@ public class Progra3 {
 						resultadoValor = valor; resultadoTipo = tipo;} else ;}}
 			else{
 				try{ int a = Integer.parseInt(nombre); resultadoValor = String.valueOf(a); resultadoTipo = "int";}
-				catch(NumberFormatException e){ int num = verificarOperacion(nombre);}  /*javax.script}*/}}
+				catch(NumberFormatException e){ int num = verificarOperacion(nombre);}  /*javax.script}*/} }
 		else{
 			if(nombre.equals("let")) System.out.println("funcion vero");
 			else if(nombre.equals("if")){
@@ -398,37 +429,30 @@ public class Progra3 {
 		return auxLet.posicion;
 	}
 	
+	/*Funcion validar_tipo()
+	 * funcion que determina el tipo de dato que se
+	 * acaba de ingresar en lista dinamico*/
 	public static void validar_tipo(){
 		NodosListaSimple veri = dinamico.PrimerNodo;
 		NodosListaSimple guar = estatico.PrimerNodo;
 		while (veri!=null && guar!=null){
 			if (veri.tipo.equals("true") || veri.tipo.equals("false")){
-				//guar.Igual = "->";
 				guar.tipo = "Boolean";
 				guar = guar.siguiente;
-				veri = veri.siguiente;
-			}//Fin del if
-			/*guar = guar.siguiente;
-			veri = veri.siguiente;*/
-			else{
-				try{
-					if (Integer.parseInt(veri.tipo) %1 == 0){
-						//guar.Igual = "->";
-						guar.tipo = "int";
-						guar = guar.siguiente;
-						veri = veri.siguiente;
-					}//Fin del if		
+				veri = veri.siguiente;}
+			else{ try{ if (Integer.parseInt(veri.tipo) %1 == 0){
+						guar.tipo = "int"; guar = guar.siguiente; veri = veri.siguiente;}//Fin del if		
 				}//Fin del try
 				catch (NumberFormatException e){
-					//guar.Igual = "->";
-					guar.tipo = definir(veri.tipo);
-					guar = guar.siguiente;
-					veri = veri.siguiente;
-				}//Fin del catch
+					guar.tipo = definir(veri.tipo); guar = guar.siguiente; veri = veri.siguiente;}//Fin del catch
 			}//Fin del else
 		}//Fin del while
 	}//Fin de valida_tipo
 
+	/*FUncion verificarOperacion()
+	 * recibe como parametro un string
+	 * dato que se analiza para saber si es un string, o esta compuesto por varios 
+	 * elementos, ya sea operaciones, tuplas o listas*/
 	public static int verificarOperacion(String valor) throws IOException{
 		ListaSimple listaOperaciones = new ListaSimple();
 		int largo = valor.length();
@@ -440,12 +464,18 @@ public class Progra3 {
 				listaOperaciones.InsertaFinal(unificar, caracter);
 				unificar = "";
 				pos++;}
-			else{unificar = unificar + caracter; pos++;}}
+			else{unificar = unificar + caracter; pos++;}
+			}
 		listaOperaciones.InsertaFinal(unificar,null);
-		if(listaOperaciones.Largo()==1){letra(unificar);validar_tipo();return 1;}
+		if(listaOperaciones.Largo()==1){ int b =letra(unificar);
+			if(b==1){validar_tipo();return 1;}
+			else return 3;}
 		else{calcular(listaOperaciones);return 2;}
 	}
 	
+	/*Funcion calcular()
+	 * Determina el tipo de dato de las variables que ya se encuentran
+	 * en las lista estatica y dinamico*/
 	public static void calcular(ListaSimple lista){
 		NodosListaSimple aux = lista.PrimerNodo;
 		int resultado = 0;
@@ -461,8 +491,11 @@ public class Progra3 {
 		}
 		resultadoValor = String.valueOf(resultado);
 		resultadoTipo = "int";
-		
 	}
+	
+	/*resolver()
+	 * recibe como parametros los datos de la funcion operaciones
+	 * y realiza la operacion correspondiente*/
 	public static int resolver(int num1,int num2,String oper){
 		int resultado;
 		if(oper.equals("+")) resultado = num1 + num2;
@@ -472,10 +505,14 @@ public class Progra3 {
 		return resultado;
 	}
 	
+	/*Funcion operaciones()
+	 * Se encarga de realizar las operaciones que presenta el codigo
+	 * por ejemplo: x+3*j/e y determina el valor de la misma*/
 	public static int operaciones(String dato1,String oper,String dato2){
+		//Cambia los String a int
 		int num1,num2;
 		try{
-			num1 = Integer.parseInt(dato1);
+			num1 = Integer.parseInt(dato1); 
 			try{num2 = Integer.parseInt(dato2); int result = resolver(num1,num2,oper);return result;}
 			catch(NumberFormatException e1){
 				NodosListaSimple aux = dinamico.BuscarElemento1(dato2);
@@ -509,7 +546,7 @@ public class Progra3 {
     valor correspondiente... Ej: val x = y se cambia por x = 6 ya que
     habia una expresion que indica que y = 6 
    */
-	public static void letra (String info) throws IOException{	
+	public static int letra (String info) throws IOException{	
 		//Se verifica que la lista no se encuentre vacia
 		if (dinamico.VaciaLista()){
 			System.out.println("Lista vacia");
@@ -537,19 +574,18 @@ public class Progra3 {
 					aux = aux.siguiente;
 				}//Fin del else
 			}//Fin del while
+			if(aux==null){resultadoTipo = definir(info); resultadoValor = info;
+				return 3;
+			}
 		}//Fin del else
+		return 0;
 		
 	}//Fin del metodo letras
 
-	public static void resolverIn(ListaSimple in) throws IOException{
-		NodosListaSimple auxIn = in.PrimerNodo;
-		if(auxIn.dat.equals("if")){ 
-			int a = arregloIf(auxIn.posicion - 1); 
-			if(in.Largo()==a+1){ ;}
-			else{ while(auxIn!=null){
-				if(auxIn.posicion==a){break;}
-				else auxIn = auxIn.siguiente;}}}}
-	
+	/*Funcion definir
+	 * Recibe como parametro un string dato
+	 * Funcion: que recibe un dato extraido de listaCodigo
+	 * para determinar el tipo de dato que es, ya sea: String, tupla, lista, char, boolean*/	
 	public static String definir(String dato){
 		char pc= ';';
 		if (dato.charAt(dato.length()-1)==pc);{
@@ -599,7 +635,6 @@ public class Progra3 {
 				result = "list "+result;
 				return result;}
 			else if(dato.indexOf("let")==0){
-				
 				return "let";//Funcion de Vero que retorna un String
 			}
 			else if(dato.indexOf("if")==0){
@@ -612,6 +647,8 @@ public class Progra3 {
 		}
 	}
 
+	/*Funcion eliminarChar()
+	 * Elimina el ';' al final de cada expresion*/
 	public static String eliminarChar(String linea,char caract1, char caract2){
 		String nuevo="";
 		for(int i=0; i<linea.length(); i++){
@@ -621,7 +658,11 @@ public class Progra3 {
 		return nuevo;
 	}
 	
+	/*Funcion imprimirTablas
+	 * como su nombre lo indica, esta funcion imprime
+	 * las tablas del ambiente dinamico y estatico*/
 	public static void imprimirTablas(){
+		System.out.println("");
 		System.out.println("\033[1;32m---- Tabla ambiente estatico ----");
 		System.out.print("\033[0m");
 		NodosListaSimple aux = estatico.PrimerNodo;
@@ -636,6 +677,7 @@ public class Progra3 {
 			System.out.println(" 	\033[1;33m"+aux1.dato+" \033[0m--> "+aux1.tipo);
 			aux1 = aux1.siguiente;
 		}
+		System.out.println("");
 	}
 }
 
